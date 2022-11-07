@@ -6,6 +6,15 @@ const form = document.getElementById('add-to-list');
 const listItems = document.getElementById('to-do-list');
 const btnClear = document.querySelector('.btn-clear');
 
+const setStorageItem = (tasks) => {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+};
+
+const getStorageItem = () => {
+  const tasks = JSON.parse(localStorage.getItem('tasks'));
+  return tasks;
+};
+
 // array for storing objects of to-do tasks
 const taskArr = [];
 
@@ -26,7 +35,7 @@ const displayTask = (task) => {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-  const tasks = JSON.parse(localStorage.getItem('tasks'));
+  const tasks = getStorageItem();
   // displaying tasks on window loading
   tasks.forEach((task) => {
     const listItem = displayTask(task);
@@ -34,13 +43,13 @@ window.addEventListener('DOMContentLoaded', () => {
   });
   // setting checkbox value to checked on window refresh if status is completed
   const completedTasksIndex = tasks.filter((task) => task.completed === true);
-  for (let i = 0; i < completedTasksIndex.length; i += 1) {
-    for (let j = 0; j < (listItems.children).length; j += 1) {
-      if (j === (completedTasksIndex[i].index - 1)) {
-        listItems.children[j].children[0].children[0].checked = true;
+  completedTasksIndex.forEach((task, taskIndex) => {
+    listItems.children.forEach((UITask, UIIndex) => {
+      if (UIIndex === (completedTasksIndex[taskIndex].index - 1)) {
+        listItems.children[UIIndex].children[0].children[0].checked = true;
       }
-    }
-  }
+    });
+  });
 });
 
 // function for adding task to list
@@ -52,7 +61,7 @@ const addTask = (task) => {
   const listItem = displayTask(taskObj);
   listItems.insertAdjacentHTML('beforeend', listItem);
   taskArr.push(taskObj);
-  localStorage.setItem('tasks', JSON.stringify(taskArr));
+  setStorageItem(taskArr);
 };
 
 // deleting task
@@ -64,19 +73,19 @@ const deleteTask = (task, element) => {
   tasks.forEach((item, ind) => {
     item.index = ind + 1;
   });
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  setStorageItem(tasks);
   element.parentElement.parentElement.remove();
 };
 
 // editing task
 // task will be edited when first the input field of task is updated and then edit icon is clicked
 const editTask = (task) => {
-  const tasks = JSON.parse(localStorage.getItem('tasks'));
+  const tasks = getStorageItem();
   const taskItem = task.children[0].children[1].name;
   const taskIndex = tasks.findIndex((x) => x.description === taskItem);
   const taskName = task.querySelector('#task-name').value;
   tasks[taskIndex].description = taskName;
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  setStorageItem(taskArr);
 };
 
 // Element target for task deletion and updation
@@ -97,7 +106,7 @@ listItems.addEventListener('click', (e) => {
 
 // clearing the completed tasks from list
 btnClear.addEventListener('click', () => {
-  const tasks = JSON.parse(localStorage.getItem('tasks'));
+  const tasks = getStorageItem();
   const filterTasks = tasks.filter((task) => task.completed === false);
   filterTasks.forEach((item, ind) => {
     item.index = ind + 1;
@@ -107,7 +116,7 @@ btnClear.addEventListener('click', () => {
     updatedList += displayTask(task);
   });
   listItems.innerHTML = updatedList;
-  localStorage.setItem('tasks', JSON.stringify(filterTasks));
+  setStorageItem();
 });
 
 form.addEventListener('submit', (e) => {
