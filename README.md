@@ -1,5 +1,5 @@
-# To-Do-list
-This repository contains the project used to keep track of daily/weekly activities.
+# To-Do-List-Peer-Review
+This repository is created for peer review of to-do-list project.
 ## Built With
 
 - HTML
@@ -8,7 +8,7 @@ This repository contains the project used to keep track of daily/weekly activiti
 
 ## Getting Started
 
-> To clone the project select the desired directory in cmd and run: `git clone https://github.com/AbeeraTahir/To-Do-list.git`
+> To clone the project select the desired directory in cmd and run: `git clone https://github.com/AbeeraTahir/To-Do-List-Peer-Review.git`
 
 ### Prerequisites
 
